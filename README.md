@@ -1,4 +1,4 @@
-![logo](./Documentation/AcademIQ.png)
+![logo](./Documentation/AcademIQlogo.png)
 
 <div align="center">
 
