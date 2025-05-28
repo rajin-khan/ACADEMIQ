@@ -13,6 +13,8 @@
 ## Overview
 **AcademIQ** is a comprehensive, scalable, and intelligent alternative to traditional student management systems (SMS). Designed to modernize NSU's existing RDS platform, AcademIQ offers a performance-driven, cloud-native system enhanced with AI-based course recommendations and an intelligent university information assistant.
 
+Please refer to [The Idea Document](./Documentation/Idea.md) for a full breakdown behind the motivation and the proposed solution [(along with the Plan)](./Documentation/Plan.md).
+
 ---
 
 ## Key Highlights
