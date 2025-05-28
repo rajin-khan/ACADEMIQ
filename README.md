@@ -99,19 +99,6 @@ React (Frontend) ↔ FastAPI (Backend) ↔ PostgreSQL / Redis
 
 ---
 
-## Budget Estimate
-
-| Phase         | Cost Estimate       |
-|---------------|---------------------|
-| Development   | $500–$800           |
-| AI Testing    | $200–$400           |
-| Cloud Scaling | $800–$1300          |
-| **Total**     | **$1500–$2500**     |
-
-> Utilizes free tiers, academic credits, and spot/preemptible instances for cost efficiency.
-
----
-
 ## Research & Publication
 Target conferences and journals:
 - IEEE EdTech & ICT in Education
