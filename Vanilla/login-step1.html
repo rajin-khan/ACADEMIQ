@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="e111250c9d4e457c819f5355a5ad95e7">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSU Portal | North South University</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-100 flex flex-col">
+  <!-- Navbar -->
+  <header class="bg-white shadow">
+    <div class="container mx-auto flex items-center py-4 px-6">
+      <a href="#" class="flex items-center">
+        <img src="https://rds3.northsouth.edu/assets/images/logo-wide.png" alt="NSU Logo" class="max-w-xs">
+      </a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow container mx-auto flex items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6 mt-10 mb-10">
+      <h3 class="text-2xl font-bold text-center mb-6">RDS</h3>
+      <div class="flex items-start space-x-4">
+        <div class="flex-shrink-0">
+          <img src="https://rds3.northsouth.edu/images/login.png" alt="Login Icon" class="w-20 h-20">
+        </div>
+        <div class="flex-grow">
+          <form method="post" action="https://rds3.northsouth.edu/common/login/preLogin">
+            <input type="hidden" name="csrf_token" value="e111250c9d4e457c819f5355a5ad95e7">
+            <p class="text-lg font-medium mb-4">NSU Portal : Login</p>
+            <div class="mb-4 grid grid-cols-3 gap-4 items-center">
+              <label for="UserName" class="col-span-1">Username</label>
+              <div class="col-span-2">
+                <input type="text" id="UserName" name="username" maxlength="11" required autofocus placeholder="Please enter your username" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+            </div>
+            <div class="flex justify-end">
+              <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">Next</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="mt-4 text-right">
+        <a href="https://rds3.northsouth.edu/common/forgetPassword" class="text-blue-500 hover:underline">Forgot your password?</a>
+      </div>
+      <div class="mt-4 text-center text-sm text-gray-600">
+        <span id="txt">Current Server Time: 04:57:27 PM</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t">
+    <div class="container mx-auto py-4 text-center">
+      <span class="font-bold text-blue-700">Developed & Maintained By Office of IT, NSU</span>
+    </div>
+  </footer>
+
+  <script src="https://rds3.northsouth.edu/assets/js/jquery-2.1.4.min.js"></script>
+  <script src="https://rds3.northsouth.edu/assets/js/login.js"></script>
+  <script>
+    var ctoday = 1748516179000;
+    localStorage.removeItem("sidebar");
+  </script>
+</body>
+</html>
