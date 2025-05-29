@@ -123,3 +123,5 @@ Target conferences and journals:
 | **Muhammad Shafayat Oshman** | North South University | Lecturer     | [![GitHub](https://img.shields.io/badge/-Shafayat19-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shafayat19) | - |
 
 ---
+
+</div>
