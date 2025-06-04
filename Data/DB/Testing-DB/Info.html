@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Database Schema</title>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <i data-lucide="database" class="w-12 h-12 text-blue-600"></i>
+                <h1 class="text-4xl font-bold text-gray-800">University Database Schema</h1>
+            </div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Comprehensive relational database design for managing students, faculties, courses, enrollments, and fees.
+                Click on any table to explore its structure in detail.
+            </p>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="flex justify-center mb-8">
+            <button id="toggle-relationships" 
+                    class="px-6 py-3 rounded-lg font-semibold transition-all bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50">
+                Show Relationships
+            </button>
+        </div>
+
+        <!-- Tables Grid -->
+        <div id="tables-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
+
+        <!-- Relationships Panel -->
+        <div id="relationships-panel" class="hidden bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200"></div>
+
+        <!-- Selected Table Details -->
+        <div id="table-details" class="hidden bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"></div>
+
+        <!-- Summary Statistics -->
+        <div id="summary-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8"></div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Database schema data (unchanged)
+        const tables = {
+            students: {
+                name: 'Students',
+                icon: 'users',
+                color: 'bg-blue-500',
+                lightColor: 'bg-blue-50 border-blue-200',
+                fields: [
+                    { name: 'student_id', type: 'VARCHAR(20)', key: 'PK', desc: 'Unique student identifier' },
+                    { name: 'full_name', type: 'VARCHAR(100)', key: '', desc: 'Student full name' },
+                    { name: 'current_status', type: 'VARCHAR(20)', key: '', desc: 'Active, Graduated, etc.' },
+                    { name: 'current_cgpa', type: 'DECIMAL(3,2)', key: '', desc: 'Current CGPA' },
+                    { name: 'credit_passed', type: 'INT', key: '', desc: 'Total credits completed' },
+                    { name: 'probation_status', type: 'VARCHAR(20)', key: '', desc: 'Academic probation status' },
+                    { name: 'major_1', type: 'VARCHAR(50)', key: '', desc: 'Primary major' },
+                    { name: 'major_2', type: 'VARCHAR(50)', key: '', desc: 'Secondary major' },
+                    { name: 'minor', type: 'VARCHAR(50)', key: '', desc: 'Minor subject' },
+                    { name: 'entry_item', type: 'VARCHAR(50)', key: '', desc: 'Entry qualification' },
+                    { name: 'test_pas_number', type: 'VARCHAR(20)', key: '', desc: 'Test pass number' },
+                    { name: 'cell_phone', type: 'VARCHAR(15)', key: '', desc: 'Mobile number' },
+                    { name: 'personal_email', type: 'VARCHAR(100)', key: '', desc: 'Email address' },
+                    { name: 'nid', type: 'VARCHAR(20)', key: '', desc: 'National ID' },
+                    { name: 'birth_reg_no', type: 'VARCHAR(20)', key: '', desc: 'Birth registration' },
+                    { name: 'date_of_birth', type: 'DATE', key: '', desc: 'Date of birth' },
+                    { name: 'sex', type: 'CHAR(1)', key: '', desc: 'Gender (M/F)' },
+                    { name: 'citizenship', type: 'VARCHAR(50)', key: '', desc: 'Citizenship' },
+                    { name: 'blood_group', type: 'VARCHAR(5)', key: '', desc: 'Blood group' },
+                    { name: 'marital_status', type: 'VARCHAR(20)', key: '', desc: 'Marital status' },
+                    { name: 'mailing_address', type: 'TEXT', key: '', desc: 'Address' },
+                    { name: 'father_name', type: 'VARCHAR(100)', key: '', desc: 'Father name' },
+                    { name: 'mother_name', type: 'VARCHAR(100)', key: '', desc: 'Mother name' },
+                    { name: 'guardian_name', type: 'VARCHAR(100)', key: '', desc: 'Guardian name' },
+                    { name: 'parent_address', type: 'TEXT', key: '', desc: 'Parent address' },
+                    { name: 'parent_phone', type: 'VARCHAR(15)', key: '', desc: 'Parent phone' },
+                    { name: 'parent_mobile', type: 'VARCHAR(15)', key: '', desc: 'Parent mobile' },
+                    { name: 'enrolled_in', type: 'VARCHAR(50)', key: '', desc: 'Enrollment type' },
+                    { name: 'curriculum', type: 'VARCHAR(50)', key: '', desc: 'Curriculum' },
+                    { name: 'degree_level', type: 'VARCHAR(20)', key: '', desc: 'Undergraduate/Graduate' }
+                ]
+            },
+            faculties: {
+                name: 'Faculties',
+                icon: 'user-check',
+                color: 'bg-green-500',
+                lightColor: 'bg-green-50 border-green-200',
+                fields: [
+                    { name: 'faculty_id', type: 'VARCHAR(20)', key: 'PK', desc: 'Unique faculty identifier' },
+                    { name: 'full_name', type: 'VARCHAR(100)', key: '', desc: 'Faculty full name' },
+                    { name: 'designation', type: 'VARCHAR(50)', key: '', desc: 'Professor, Associate Prof, etc.' },
+                    { name: 'department', type: 'VARCHAR(50)', key: '', desc: 'Department name' },
+                    { name: 'email', type: 'VARCHAR(100)', key: '', desc: 'Official email' },
+                    { name: 'phone', type: 'VARCHAR(15)', key: '', desc: 'Office phone' },
+                    { name: 'office_address', type: 'TEXT', key: '', desc: 'Office location' },
+                    { name: 'specialization', type: 'TEXT', key: '', desc: 'Area of expertise' },
+                    { name: 'personal_email', type: 'VARCHAR(100)', key: '', desc: 'Personal email' },
+                    { name: 'cell_phone', type: 'VARCHAR(15)', key: '', desc: 'Mobile number' },
+                    { name: 'date_of_birth', type: 'DATE', key: '', desc: 'Date of birth' },
+                    { name: 'sex', type: 'CHAR(1)', key: '', desc: 'Gender (M/F)' },
+                    { name: 'blood_group', type: 'VARCHAR(5)', key: '', desc: 'Blood group' },
+                    { name: 'address', type: 'TEXT', key: '', desc: 'Home address' },
+                    { name: 'join_date', type: 'DATE', key: '', desc: 'Employment start date' },
+                    { name: 'employment_status', type: 'VARCHAR(20)', key: '', desc: 'Active, Retired, etc.' },
+                    { name: 'salary_grade', type: 'VARCHAR(10)', key: '', desc: 'Salary grade' }
+                ]
+            },
+            courses: {
+                name: 'Courses',
+                icon: 'book-open',
+                color: 'bg-purple-500',
+                lightColor: 'bg-purple-50 border-purple-200',
+                fields: [
+                    { name: 'course_code', type: 'VARCHAR(10)', key: 'PK', desc: 'Course code (e.g., CSE327)' },
+                    { name: 'course_title', type: 'VARCHAR(100)', key: '', desc: 'Course title' },
+                    { name: 'credit_hours', type: 'DECIMAL(2,1)', key: '', desc: 'Credit hours' },
+                    { name: 'course_type', type: 'VARCHAR(20)', key: '', desc: 'Theory, Lab, Project' },
+                    { name: 'department', type: 'VARCHAR(50)', key: '', desc: 'Offering department' },
+                    { name: 'prerequisite', type: 'VARCHAR(200)', key: '', desc: 'Required prerequisites' },
+                    { name: 'description', type: 'TEXT', key: '', desc: 'Course description' }
+                ]
+            },
+            semesters: {
+                name: 'Semesters',
+                icon: 'calendar',
+                color: 'bg-orange-500',
+                lightColor: 'bg-orange-50 border-orange-200',
+                fields: [
+                    { name: 'semester_id', type: 'INT', key: 'PK', desc: 'Auto-increment ID' },
+                    { name: 'semester_name', type: 'VARCHAR(20)', key: '', desc: 'e.g., Summer 2025' },
+                    { name: 'year', type: 'INT', key: '', desc: 'Academic year' },
+                    { name: 'season', type: 'VARCHAR(10)', key: '', desc: 'Summer, Fall, Spring' },
+                    { name: 'start_date', type: 'DATE', key: '', desc: 'Semester start date' },
+                    { name: 'end_date', type: 'DATE', key: '', desc: 'Semester end date' },
+                    { name: 'registration_start', type: 'DATE', key: '', desc: 'Registration opens' },
+                    { name: 'registration_end', type: 'DATE', key: '', desc: 'Registration closes' },
+                    { name: 'is_current', type: 'BOOLEAN', key: '', desc: 'Current active semester' }
+                ]
+            },
+            course_sections: {
+                name: 'Course Sections',
+                icon: 'graduation-cap',
+                color: 'bg-red-500',
+                lightColor: 'bg-red-50 border-red-200',
+                fields: [
+                    { name: 'section_id', type: 'INT', key: 'PK', desc: 'Auto-increment ID' },
+                    { name: 'course_code', type: 'VARCHAR(10)', key: 'FK', desc: 'References courses' },
+                    { name: 'section_number', type: 'INT', key: '', desc: 'Section number' },
+                    { name: 'semester_id', type: 'INT', key: 'FK', desc: 'References semesters' },
+                    { name: 'faculty_id', type: 'VARCHAR(20)', key: 'FK', desc: 'References faculties' },
+                    { name: 'day_of_week', type: 'VARCHAR(10)', key: '', desc: 'S, M, T, W, R, F, ST' },
+                    { name: 'start_time', type: 'TIME', key: '', desc: 'Class start time' },
+                    { name: 'end_time', type: 'TIME', key: '', desc: 'Class end time' },
+                    { name: 'room', type: 'VARCHAR(20)', key: '', desc: 'Room number' },
+                    { name: 'max_capacity', type: 'INT', key: '', desc: 'Maximum students' },
+                    { name: 'enrolled_count', type: 'INT', key: '', desc: 'Current enrollment' },
+                    { name: 'section_status', type: 'VARCHAR(20)', key: '', desc: 'Active, Cancelled' }
+                ]
+            },
+            student_enrollments: {
+                name: 'Student Enrollments',
+                icon: 'users',
+                color: 'bg-teal-500',
+                lightColor: 'bg-teal-50 border-teal-200',
+                fields: [
+                    { name: 'enrollment_id', type: 'INT', key: 'PK', desc: 'Auto-increment ID' },
+                    { name: 'student_id', type: 'VARCHAR(20)', key: 'FK', desc: 'References students' },
+                    { name: 'section_id', type: 'INT', key: 'FK', desc: 'References course_sections' },
+                    { name: 'semester_id', type: 'INT', key: 'FK', desc: 'References semesters' },
+                    { name: 'enrollment_status', type: 'VARCHAR(20)', key: '', desc: 'Enrolled, Dropped, Completed' },
+                    { name: 'enrollment_date', type: 'DATE', key: '', desc: 'Date of enrollment' },
+                    { name: 'drop_date', type: 'DATE', key: '', desc: 'Date dropped (if applicable)' },
+                    { name: 'grade', type: 'VARCHAR(5)', key: '', desc: 'Final grade (A+, A, B+, etc.)' },
+                    { name: 'grade_points', type: 'DECIMAL(3,2)', key: '', desc: 'Grade points earned' },
+                    { name: 'final_marks', type: 'DECIMAL(5,2)', key: '', desc: 'Final examination marks' },
+                    { name: 'tuition_fee', type: 'DECIMAL(10,2)', key: '', desc: 'Course tuition fee' },
+                    { name: 'payment_status', type: 'VARCHAR(20)', key: '', desc: 'Paid, Unpaid, Partial' },
+                    { name: 'payment_date', type: 'DATE', key: '', desc: 'Payment date' }
+                ]
+            },
+            student_fees: {
+                name: 'Student Fees',
+                icon: 'credit-card',
+                color: 'bg-indigo-500',
+                lightColor: 'bg-indigo-50 border-indigo-200',
+                fields: [
+                    { name: 'fee_id', type: 'INT', key: 'PK', desc: 'Auto-increment ID' },
+                    { name: 'student_id', type: 'VARCHAR(20)', key: 'FK', desc: 'References students' },
+                    { name: 'semester_id', type: 'INT', key: 'FK', desc: 'References semesters' },
+                    { name: 'student_activity_fee', type: 'DECIMAL(8,2)', key: '', desc: 'Activity fee amount' },
+                    { name: 'computer_lab_fee', type: 'DECIMAL(8,2)', key: '', desc: 'Computer lab fee' },
+                    { name: 'library_fee', type: 'DECIMAL(8,2)', key: '', desc: 'Library fee' },
+                    { name: 'science_lab_fee', type: 'DECIMAL(8,2)', key: '', desc: 'Science lab fee' },
+                    { name: 'studio_lab_fee', type: 'DECIMAL(8,2)', key: '', desc: 'Studio lab fee' },
+                    { name: 'total_fees', type: 'DECIMAL(10,2)', key: '', desc: 'Total fee amount' },
+                    { name: 'amount_paid', type: 'DECIMAL(10,2)', key: '', desc: 'Amount paid' },
+                    { name: 'balance_due', type: 'DECIMAL(10,2)', key: '', desc: 'Outstanding balance' },
+                    { name: 'payment_status', type: 'VARCHAR(20)', key: '', desc: 'Payment status' },
+                    { name: 'due_date', type: 'DATE', key: '', desc: 'Payment due date' },
+                    { name: 'library_clearance', type: 'VARCHAR(10)', key: '', desc: 'OK, Pending, Hold' }
+                ]
+            },
+            rooms: {
+                name: 'Rooms',
+                icon: 'building',
+                color: 'bg-gray-500',
+                lightColor: 'bg-gray-50 border-gray-200',
+                fields: [
+                    { name: 'room_id', type: 'VARCHAR(20)', key: 'PK', desc: 'Room identifier' },
+                    { name: 'building', type: 'VARCHAR(50)', key: '', desc: 'Building name' },
+                    { name: 'floor', type: 'INT', key: '', desc: 'Floor number' },
+                    { name: 'capacity', type: 'INT', key: '', desc: 'Room capacity' },
+                    { name: 'room_type', type: 'VARCHAR(20)', key: '', desc: 'Classroom, Lab, Auditorium' },
+                    { name: 'equipment', type: 'TEXT', key: '', desc: 'Available equipment' },
+                    { name: 'status', type: 'VARCHAR(20)', key: '', desc: 'Active, Maintenance' }
+                ]
+            }
+        };
+
+        const relationships = [
+            { from: 'students', to: 'student_enrollments', type: 'One-to-Many', desc: 'A student can have multiple enrollments' },
+            { from: 'faculties', to: 'course_sections', type: 'One-to-Many', desc: 'A faculty can teach multiple sections' },
+            { from: 'courses', to: 'course_sections', type: 'One-to-Many', desc: 'A course can have multiple sections' },
+            { from: 'semesters', to: 'course_sections', type: 'One-to-Many', desc: 'A semester contains multiple sections' },
+            { from: 'course_sections', to: 'student_enrollments', type: 'One-to-Many', desc: 'A section can have multiple students' },
+            { from: 'students', to: 'student_fees', type: 'One-to-Many', desc: 'A student has fees per semester' },
+            { from: 'semesters', to: 'student_fees', type: 'One-to-Many', desc: 'A semester has fees for multiple students' }
+        ];
+
+        // State management
+        let selectedTable = 'students';
+        let showRelationships = false;
+
+        // DOM elements
+        const tablesGrid = document.getElementById('tables-grid');
+        const relationshipsPanel = document.getElementById('relationships-panel');
+        const tableDetails = document.getElementById('table-details');
+        const toggleButton = document.getElementById('toggle-relationships');
+        const summaryStats = document.getElementById('summary-stats');
+
+        // Render table card
+        function renderTableCard(tableName, table) {
+            const isSelected = selectedTable === tableName;
+            const card = document.createElement('div');
+            card.className = `cursor-pointer transition-all duration-300 ${isSelected ? 'transform scale-105 shadow-xl ring-4 ring-blue-300' : 'hover:shadow-lg hover:transform hover:scale-102'}`;
+            card.innerHTML = `
+                <div class="${table.lightColor} border-2 rounded-lg p-4">
+                    <div class="${table.color} text-white rounded-lg p-3 mb-3 flex items-center gap-2">
+                        <i data-lucide="${table.icon}" class="w-6 h-6"></i>
+                        <h3 class="font-bold text-lg">${table.name}</h3>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        <p class="font-semibold mb-1">${table.fields.length} fields</p>
+                        <p>Primary Key: ${table.fields.find(f => f.key === 'PK')?.name}</p>
+                        <p>Foreign Keys: ${table.fields.filter(f => f.key === 'FK').length}</p>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                selectedTable = tableName;
+                renderTables();
+                renderTableDetails();
+            });
+            return card;
+        }
+
+        // Render tables grid
+        function renderTables() {
+            tablesGrid.innerHTML = '';
+            Object.entries(tables).forEach(([key, table]) => {
+                tablesGrid.appendChild(renderTableCard(key, table));
+            });
+            lucide.createIcons();
+        }
+
+        // Render relationships panel
+        function renderRelationships() {
+            relationshipsPanel.className = showRelationships 
+                ? 'bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200'
+                : 'hidden';
+            if (!showRelationships) return;
+            relationshipsPanel.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="database" class="w-6 h-6"></i>
+                    Table Relationships
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${relationships.map((rel, index) => `
+                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-semibold text-blue-600">${tables[rel.from].name}</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="font-semibold text-green-600">${tables[rel.to].name}</span>
+                            </div>
+                            <div class="text-sm text-purple-600 font-medium mb-1">${rel.type}</div>
+                            <div class="text-sm text-gray-600">${rel.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // Render table details
+        function renderTableDetails() {
+            if (!selectedTable || !tables[selectedTable]) return;
+            const table = tables[selectedTable];
+            tableDetails.className = 'bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden';
+            tableDetails.innerHTML = `
+                <div class="${table.color} text-white p-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="${table.icon}" class="w-6 h-6"></i>
+                        <h2 class="text-3xl font-bold">${table.name} Table</h2>
+                    </div>
+                    <p class="text-blue-100">
+                        ${table.fields.length} fields • 
+                        ${table.fields.filter(f => f.key === 'PK').length} primary key • 
+                        ${table.fields.filter(f => f.key === 'FK').length} foreign keys
+                    </p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b-2 border-gray-200">
+                            <tr>
+                                <th class="py-3 px-3 text-left font-bold text-gray-700">Field Name</th>
+                                <th class="py-3 px-3 text-left font-bold text-gray-700">Data Type</th>
+                                <th class="py-3 px-3 text-left font-bold text-gray-700">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${table.fields.map(field => `
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-2 px-3 font-mono text-sm">
+                                        <div class="flex items-center gap-2">
+                                            ${field.name}
+                                            ${field.key === 'PK' ? '<span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-bold">PK</span>' : ''}
+                                            ${field.key === 'FK' ? '<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-bold">FK</span>' : ''}
+                                        </div>
+                                    </td>
+                                    <td class="py-2 px-3 font-mono text-sm text-purple-600">${field.type}</td>
+                                    <td class="py-2 px-3 text-sm text-gray-600">${field.desc}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // Render summary statistics
+        function renderSummaryStats() {
+            summaryStats.innerHTML = `
+                <div class="bg-white rounded-lg p-4 text-center shadow-md border border-gray-200">
+                    <div class="text-2xl font-bold text-blue-600">${Object.keys(tables).length}</div>
+                    <div class="text-gray-600">Total Tables</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 text-center shadow-md border border-gray-200">
+                    <div class="text-2xl font-bold text-green-600">
+                        ${Object.values(tables).reduce((sum, table) => sum + table.fields.length, 0)}
+                    </div>
+                    <div class="text-gray-600">Total Fields</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 text-center shadow-md border border-gray-200">
+                    <div class="text-2xl font-bold text-purple-600">${relationships.length}</div>
+                    <div class="text-gray-600">Relationships</div>
+                </div>
+                <div class="bg-white rounded-lg p-4 text-center shadow-md border border-gray-200">
+                    <div class="text-2xl font-bold text-orange-600">
+                        ${Object.values(tables).reduce((sum, table) => sum + table.fields.filter(f => f.key === 'FK').length, 0)}
+                    </div>
+                    <div class="text-gray-600">Foreign Keys</div>
+                </div>
+            `;
+        }
+
+        // Toggle relationships
+        toggleButton.addEventListener('click', () => {
+            showRelationships = !showRelationships;
+            toggleButton.textContent = showRelationships ? 'Hide Relationships' : 'Show Relationships';
+            toggleButton.className = `px-6 py-3 rounded-lg font-semibold transition-all ${
+                showRelationships 
+                    ? 'bg-blue-600 text-white shadow-lg' 
+                    : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
+            }`;
+            renderRelationships();
+        });
+
+        // Initial render
+        renderTables();
+        renderRelationships();
+        renderTableDetails();
+        renderSummaryStats();
+    </script>
+</body>
+</html>

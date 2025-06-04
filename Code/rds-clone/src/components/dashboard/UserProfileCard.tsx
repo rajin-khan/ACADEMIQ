@@ -17,79 +17,79 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
   const [activityOpen, setActivityOpen] = useState(false);
 
   const profileItems = [
-    { icon: <CogIcon className="h-5 w-5 text-nsu-accent mr-2" />, text: userId },
-    { icon: <EnvelopeIcon className="h-5 w-5 text-pink-500 mr-2" />, text: userEmail },
-    { icon: <GlobeAltIcon className="h-5 w-5 text-blue-500 mr-2" />, text: `Degree: ${degree}` },
-    { icon: <BookOpenIcon className="h-5 w-5 text-green-500 mr-2" />, text: `Curriculum: ${curriculum}` },
+    { icon: <CogIcon className="h-5 w-5 text-brand-cyan mr-3 flex-shrink-0" />, text: userId },
+    { icon: <EnvelopeIcon className="h-5 w-5 text-brand-pink mr-3 flex-shrink-0" />, text: userEmail },
+    { icon: <GlobeAltIcon className="h-5 w-5 text-brand-lime mr-3 flex-shrink-0" />, text: `Degree: ${degree}` },
+    { icon: <BookOpenIcon className="h-5 w-5 text-brand-orange mr-3 flex-shrink-0" />, text: `Curriculum: ${curriculum}` },
   ];
 
-  // Placeholder activity data
   const activityData = [
-    { activity: "Faculty Evaluation", semester: "Summer 2025", status: "Not Done", statusColor: "text-red-500" },
-    { activity: "Faculty Evaluation", semester: "Spring 2025", status: "Done", statusColor: "text-green-500" },
-    { activity: "Preadvising", semester: "Fall 2025", status: "Not Done", statusColor: "text-red-500" },
+    { activity: "Faculty Evaluation", semester: "Summer 2025", status: "Not Done", statusColor: "text-brand-orange" },
+    { activity: "Faculty Evaluation", semester: "Spring 2025", status: "Done", statusColor: "text-brand-lime" },
+    { activity: "Preadvising", semester: "Fall 2025", status: "Not Done", statusColor: "text-brand-orange" },
     { activity: "Payment", semester: "Summer 2025", status: "View", isButton: true },
   ];
 
-
   return (
-    <div className="bg-white shadow-xl rounded-lg p-6">
+    <div className="bg-dark-secondary shadow-xl rounded-lg p-6 border border-dark-tertiary">
       <div className="flex flex-col items-center">
-        <img
-          className="w-32 h-32 rounded-full border-4 border-nsu-primary object-cover mb-4"
-          src={avatarUrl}
-          alt={userName}
-        />
-        <h2 className="text-xl font-semibold text-nsu-dark-text bg-nsu-primary/10 px-4 py-1 rounded-md">
+        <div className="p-1 bg-gradient-to-br from-brand-pink via-brand-purple to-brand-blue rounded-full mb-4">
+          <img
+            className="w-32 h-32 rounded-full border-4 border-dark-secondary object-cover"
+            src={avatarUrl}
+            alt={userName}
+          />
+        </div>
+        <h2 className="text-xl font-semibold text-light-primary bg-dark-tertiary/50 px-6 py-2 rounded-md">
           {userName}
         </h2>
       </div>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-8 space-y-4">
         {profileItems.map((item, index) => (
-          <div key={index} className="flex items-center text-sm text-gray-700">
+          <div key={index} className="flex items-center text-sm text-light-secondary">
             {item.icon}
-            <span>{item.text}</span>
+            <span className="truncate">{item.text}</span>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 border-t pt-4">
+      <div className="mt-6 border-t border-dark-tertiary pt-6">
         <a
           href="#"
           target="_blank"
-          className="flex items-center text-sm text-nsu-secondary hover:text-nsu-primary font-medium"
+          className="flex items-center text-sm text-brand-cyan hover:text-brand-blue font-medium transition-colors"
         >
-          <DocumentTextIcon className="h-5 w-5 mr-2" />
-          Student's code of conduct during examinations
+          <DocumentTextIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+          Student's code of conduct
         </a>
       </div>
 
-      <div className="mt-6 border-t pt-4">
+      <div className="mt-6 border-t border-dark-tertiary pt-6">
         <button
           onClick={() => setActivityOpen(!activityOpen)}
-          className="w-full flex justify-between items-center text-left py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-md"
+          className="w-full flex justify-between items-center text-left py-3 px-4 bg-dark-tertiary/50 hover:bg-dark-tertiary rounded-md transition-colors"
         >
-          <span className="font-semibold text-nsu-dark-text">Activity Status</span>
-          {activityOpen ? <ChevronUpIcon className="h-5 w-5 text-gray-600" /> : <ChevronDownIcon className="h-5 w-5 text-gray-600" />}
+          <span className="font-semibold text-light-primary">Activity Status</span>
+          {activityOpen ? <ChevronUpIcon className="h-5 w-5 text-light-tertiary" /> : <ChevronDownIcon className="h-5 w-5 text-light-tertiary" />}
         </button>
         {activityOpen && (
-          <div className="mt-2 text-sm">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="mt-3 text-sm bg-dark-primary/30 rounded-md p-1">
+            <table className="min-w-full">
+              <thead className="border-b border-dark-tertiary/50">
                 <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-light-tertiary uppercase tracking-wider">Activity</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-light-tertiary uppercase tracking-wider">Semester</th>
+                  <th className="px-3 py-2.5 text-left text-xs font-medium text-light-tertiary uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-dark-tertiary/50">
                 {activityData.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-3 py-2 whitespace-nowrap">{item.activity}</td>
-                    <td className="px-3 py-2 whitespace-nowrap">{item.semester}</td>
-                    <td className={`px-3 py-2 whitespace-nowrap ${item.statusColor}`}>
-                      {item.isButton ? <button className="text-xs bg-nsu-accent text-white py-1 px-2 rounded hover:bg-nsu-accent/80">{item.status}</button> : item.status}
+                  <tr key={index} className="hover:bg-dark-tertiary/30 transition-colors">
+                    <td className="px-3 py-2.5 whitespace-nowrap text-light-secondary">{item.activity}</td>
+                    <td className="px-3 py-2.5 whitespace-nowrap text-light-secondary">{item.semester}</td>
+                    <td className={`px-3 py-2.5 whitespace-nowrap ${item.statusColor}`}>
+                      {item.isButton ? <button className="text-xs bg-gradient-to-r from-brand-lime to-brand-cyan text-dark-primary py-1 px-3 rounded-md hover:opacity-90 font-semibold">{item.status}</button> : item.status}
                     </td>
                   </tr>
                 ))}

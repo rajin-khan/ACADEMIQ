@@ -1,9 +1,9 @@
 // rds-clone/src/components/dashboard/DashboardHeader.tsx
 import React, { useState } from 'react';
-import { Bars3Icon, BellIcon, UserCircleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, UserCircleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'; // BellIcon removed for minimalism
 
 interface DashboardHeaderProps {
-  onToggleSidebar?: () => void; // For mobile sidebar, if you implement one
+  onToggleSidebar?: () => void;
   userName: string;
   userId: string;
 }
@@ -12,76 +12,68 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onToggleSidebar, user
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-dark-secondary shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Left side: Logo and optional mobile menu toggle */}
           <div className="flex items-center">
             {onToggleSidebar && (
               <button
                 onClick={onToggleSidebar}
-                className="mr-4 text-gray-500 hover:text-nsu-primary focus:outline-none lg:hidden"
+                className="mr-4 text-light-tertiary hover:text-brand-cyan focus:outline-none lg:hidden"
               >
                 <Bars3Icon className="h-6 w-6" />
               </button>
             )}
             <a href="#" className="flex items-center">
               <img
-                src="/images/logo-wide.png" // Assuming logo is in public/images/
+                src="/images/logo-wide.png"
                 alt="North South University"
                 className="h-10 md:h-12"
               />
             </a>
           </div>
 
-          {/* Right side: User menu */}
           <div className="flex items-center space-x-4">
-            {/* Notifications (optional) */}
-            {/* <button className="p-1 rounded-full text-gray-400 hover:text-nsu-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nsu-accent">
-              <BellIcon className="h-6 w-6" />
-            </button> */}
-
-            {/* User dropdown */}
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nsu-accent"
+                className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-secondary focus:ring-brand-cyan p-0.5 bg-gradient-to-r from-brand-pink to-brand-orange"
               >
                 <img
-                  className="h-10 w-10 rounded-full border-2 border-nsu-primary object-cover"
-                  src="https://rds3.northsouth.edu/assets/images/avatars/profile-pic.jpg" // Placeholder
+                  className="h-10 w-10 rounded-full border-2 border-dark-secondary object-cover"
+                  src="https://rds3.northsouth.edu/assets/images/avatars/profile-pic.jpg"
                   alt="User avatar"
                 />
-                <div className="ml-3 hidden md:block text-left">
-                  <p className="text-sm font-medium text-nsu-dark-text leading-tight">Welcome,</p>
-                  <p className="text-xs text-gray-500 leading-tight">{userId}</p>
+                <div className="ml-3 hidden md:block text-left mr-2">
+                  <p className="text-sm font-medium text-light-primary leading-tight">Welcome,</p>
+                  <p className="text-xs text-light-tertiary leading-tight">{userId}</p>
                 </div>
-                 <svg className="ml-2 h-5 w-5 text-gray-400 hidden md:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                 <svg className={`ml-1 h-5 w-5 text-light-primary hidden md:block transform transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
               {userMenuOpen && (
                 <div
-                  className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-xl py-1 bg-dark-secondary ring-1 ring-dark-tertiary focus:outline-none"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
                 >
                   <a
                     href="#"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center px-4 py-3 text-sm text-light-secondary hover:bg-dark-tertiary hover:text-brand-cyan"
                     role="menuitem"
                   >
-                    <UserCircleIcon className="h-5 w-5 mr-2 text-gray-500" />
+                    <UserCircleIcon className="h-5 w-5 mr-3 text-light-tertiary" />
                     My Profile
                   </a>
                   <a
-                    href="#" // This should link to the logout action
+                    href="#"
                     onClick={() => alert("Logout clicked! Implement logout.")}
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center px-4 py-3 text-sm text-light-secondary hover:bg-dark-tertiary hover:text-brand-pink"
                     role="menuitem"
                   >
-                    <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2 text-gray-500" />
+                    <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-3 text-light-tertiary" />
                     Logout
                   </a>
                 </div>

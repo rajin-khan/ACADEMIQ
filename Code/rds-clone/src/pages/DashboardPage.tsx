@@ -1,14 +1,13 @@
 // rds-clone/src/pages/DashboardPage.tsx
 import React, { useState } from 'react';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
-import Navbar from '../components/dashboard/Navbar'; // Import Navbar default export
-import type { ActiveNavItems } from '../components/dashboard/Navbar'; // Import ActiveNavItems as a type
+import Navbar from '../components/dashboard/Navbar';
+import type { ActiveNavItems } from '../components/dashboard/Navbar';
 import UserProfileCard from '../components/dashboard/UserProfileCard';
 import FacultyAdvisorCard from '../components/dashboard/FacultyAdvisorCard';
 import DashboardFooter from '../components/common/DashboardFooter';
 
 const DashboardPage: React.FC = () => {
-  // Dummy data - replace with actual data from API/state
   const userData = {
     userName: "Adib Ar Rahman Khan",
     userId: "2212708042",
@@ -25,27 +24,22 @@ const DashboardPage: React.FC = () => {
     email: "tanzilah.shabnam@northsouth.edu",
   };
 
-  // Example: Set the active navigation item. In a real app, this would come from routing.
   const [currentNavItem, setCurrentNavItem] = useState<ActiveNavItems>("Home");
 
-  // You could have functions to change currentNavItem, e.g., when a sub-page loads
-  // For now, we'll just pass it.
-
   return (
-    <div className="min-h-screen flex flex-col bg-nsu-light-bg">
+    <div className="min-h-screen flex flex-col bg-dark-primary"> {/* Base dark background */}
       <DashboardHeader userName={userData.userName} userId={userData.userId} />
-      <Navbar activeItem={currentNavItem} /> {/* Pass the activeItem prop */}
+      <Navbar activeItem={currentNavItem} />
       
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-semibold text-nsu-dark-text">
-            Welcome, {userData.userName}
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-semibold text-light-primary">
+            Welcome, <span className="text-gradient-pink-orange">{userData.userName}</span>
           </h1>
-          {/* Example to test changing active nav item - remove in final */}
-          <div className="mt-2 space-x-2">
-            <button onClick={() => setCurrentNavItem("Home")} className="p-1 text-xs bg-gray-200 rounded hover:bg-gray-300">Set Home Active</button>
-            <button onClick={() => setCurrentNavItem("Advising")} className="p-1 text-xs bg-gray-200 rounded hover:bg-gray-300">Set Advising Active</button>
-            <button onClick={() => setCurrentNavItem("Profile")} className="p-1 text-xs bg-gray-200 rounded hover:bg-gray-300">Set Profile Active</button>
+          {/* Example buttons for testing nav state - can be removed */}
+          <div className="mt-3 space-x-2 hidden">
+            <button onClick={() => setCurrentNavItem("Home")} className="p-1 text-xs bg-dark-tertiary text-light-secondary rounded hover:bg-dark-secondary">Set Home</button>
+            <button onClick={() => setCurrentNavItem("Advising")} className="p-1 text-xs bg-dark-tertiary text-light-secondary rounded hover:bg-dark-secondary">Set Advising</button>
           </div>
         </div>
 
@@ -53,8 +47,9 @@ const DashboardPage: React.FC = () => {
           <div className="lg:col-span-1">
             <UserProfileCard {...userData} />
           </div>
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-8"> {/* Added space-y for multiple cards */}
             <FacultyAdvisorCard advisor={advisorData} />
+            {/* You can add more cards or components here in the future */}
           </div>
         </div>
       </main>

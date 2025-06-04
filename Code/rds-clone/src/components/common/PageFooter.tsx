@@ -12,13 +12,13 @@ const PageFooter: React.FC = () => {
   }, []);
 
   return (
-    <footer className="py-6 text-center">
+    <footer className="py-8 text-center border-t border-dark-tertiary">
       {currentTime && (
-        <p className="text-sm text-gray-600 mb-2">
+        <p className="text-sm text-light-tertiary mb-2">
           Current Server Time: {currentTime}
         </p>
       )}
-      <p className="text-sm text-nsu-secondary font-semibold">
+      <p className="text-sm text-brand-cyan font-semibold">
         Developed & Maintained By Office of IT, NSU
       </p>
     </footer>
