@@ -1,69 +1,47 @@
+/* rds-clone/src/index.css */
 @import "tailwindcss";
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@theme {
+  /* Define colors as CSS Custom Properties */
+  --color-nsu-primary: #003C71;
+  --color-nsu-secondary: #007A8D;
+  --color-nsu-accent: #6EBE44;
+  --color-nsu-light-bg: #F0F4F8;
+  --color-nsu-dark-text: #1A202C;
+  --color-nsu-light-text: #F7FAFC;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* Define font families as CSS Custom Properties
+     Tailwind v4 will then pick these up to create font utilities.
+     The key is how Tailwind v4 maps these CSS variables to its utility classes.
+     For font-sans, it might look for a --font-sans variable or similar.
+     Or, you might need to define the font stack in the body and then use a generic font utility.
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+     Let's try defining a variable for the sans-serif stack.
+     Tailwind v4 should then allow you to use `font-sans` if it's configured
+     to pick up `--font-family-sans` or if `font-sans` defaults to a variable system.
+  */
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  /*
+    For Tailwind v4, when using CSS custom properties in @theme:
+    1. The `font-sans` utility should ideally pick up the `--font-family-sans` variable.
+    2. The `bg-nsu-light-bg` utility should be generated from `--color-nsu-light-bg`.
+    3. The `text-nsu-dark-text` utility should be generated from `--color-nsu-dark-text`.
+  */
+  /*font-family: var(--font-family-sans); /* Apply the font directly first */
+  /*background-color: var(--color-nsu-light-bg); /* Apply color directly */
+  /*color: var(--color-nsu-dark-text); /* Apply color directly */
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  /*
+    Then, check if @apply works with the generated utilities.
+    If Tailwind v4 correctly generates `bg-nsu-light-bg` from `--color-nsu-light-bg`,
+    and `font-sans` from `--font-family-sans`, then @apply should work.
+    If @apply still fails for these custom names, it means the direct variable usage above
+    is the primary way, and Tailwind's default utilities (like `bg-blue-500`) would still work.
+    The goal of @theme is to make Tailwind aware of these variables for its system.
+  */
+    @apply font-sans bg-nsu-light-bg text-nsu-dark-text;
+  /* Let's comment out @apply for a moment to see if direct var() usage works first */
 }
