@@ -75,7 +75,7 @@ This database schema is designed to manage a comprehensive university system, ha
 - `faculty_id`: Assigned instructor (references faculties table)
 
 **Schedule Information**:
-- `day_of_week`: Class days (S, M, T, W, R, F, ST)
+- `day_of_week`: Class days (S, M, T, W, R, F, A)
 - `start_time`, `end_time`: Class duration
 - `room`: Classroom assignment
 
