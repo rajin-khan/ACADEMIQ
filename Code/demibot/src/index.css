@@ -8,18 +8,22 @@
   */
   --color-background: #0c0a09;      /* Almost Black / Rich Black */
   --color-surface: #18181b;           /* Zinc-900 for surfaces */
+  --color-surface-muted: #27272a;     /* Zinc-800 for hover states */
   
   --color-text-primary: #f4f4f5;      /* Zinc-100 */
   --color-text-secondary: #a1a1aa;    /* Zinc-400 */
   --color-text-muted: #52525b;        /* Zinc-600 */
 
-  /* --- NEW BLUE ACCENT PALETTE --- */
   --color-accent: #3b82f6;            /* Blue-500 */
   --color-accent-hover: #2563eb;      /* Blue-600 */
   --color-accent-focus: #60a5fa;      /* Blue-400 */
   
   --color-border: #3f3f46;            /* Zinc-700 */
   --color-border-subtle: #27272a;     /* Zinc-800 */
+
+  /* --- (CORRECTION) NEW LIGHT BLUE SUCCESS COLOR PALETTE --- */
+  --color-success: #dbeafe;           /* Light Blue / "Almost White" */
+  --color-success-glow: #dbeafe80;    /* Light Blue with ~50% opacity */
 
   /* Font Family */
   --font-family-mono: 'JetBrains Mono', monospace;
@@ -29,12 +33,11 @@
 body {
   font-family: var(--font-family-mono);
   background-color: var(--color-background);
-  /* REVISED GRADIENT: No orange, just a cool blue glow */
   background-image: radial-gradient(ellipse 80% 50% at 50% -20%,rgba(59, 130, 246, 0.15), transparent);
   color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden; /* Prevent body scroll */
+  overflow: hidden;
 }
 
 /* Custom scrollbar */
@@ -48,99 +51,68 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .animate-fade-in {
   animation: fade-in 0.5s ease-in-out forwards;
 }
 
+/* Success Tooltip Animation */
+@keyframes tooltip-fade-in-up {
+  from { opacity: 0; transform: translate(-50%, 5px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 /* --- GFM MARKDOWN STYLES --- */
-.markdown-content {
-  @apply text-base leading-relaxed text-text-primary whitespace-pre-wrap;
-}
-
-.markdown-content > *:first-child {
-  @apply mt-0;
-}
-
-.markdown-content > *:last-child {
-  @apply mb-0;
-}
-
-/* Headings */
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3 {
-  @apply mt-4 mb-3 font-bold border-b border-border-subtle pb-2;
-}
+.markdown-content { @apply text-base leading-relaxed text-text-primary whitespace-pre-wrap; }
+.markdown-content > *:first-child { @apply mt-0; }
+.markdown-content > *:last-child { @apply mb-0; }
+.markdown-content h1, .markdown-content h2, .markdown-content h3 { @apply mt-4 mb-3 font-bold border-b pb-2 border-[--color-border-subtle]; }
 .markdown-content h1 { @apply text-xl; }
 .markdown-content h2 { @apply text-lg; }
 .markdown-content h3 { @apply text-base; }
+.markdown-content p { @apply my-4; }
+.markdown-content a { @apply text-[--color-accent] hover:text-[--color-accent-hover] hover:underline; }
+.markdown-content ul, .markdown-content ol { @apply my-4 pl-6; }
+.markdown-content ul { @apply list-disc; }
+.markdown-content ol { @apply list-decimal; }
+.markdown-content li { @apply mb-2; }
+.markdown-content li > p { @apply inline; }
+.markdown-content blockquote { @apply border-l-4 border-[--color-accent] pl-4 my-4 text-text-secondary italic; }
+.markdown-content pre { @apply bg-black/50 p-4 rounded-lg my-4 overflow-x-auto; }
+.markdown-content pre code { @apply font-mono text-sm whitespace-pre; background-color: transparent !important; padding: 0 !important; }
+.markdown-content code { @apply bg-surface text-[--color-accent-focus] font-mono text-sm rounded px-1.5 py-1; }
+.markdown-content table { @apply w-full my-4 border-collapse text-left; }
+.markdown-content th, .markdown-content td { @apply p-3 align-top border border-[--color-border-subtle]; }
+.markdown-content thead { @apply bg-surface; }
+.markdown-content thead th { @apply font-semibold; }
+.markdown-content hr { @apply border-t my-6 border-[--color-border]; }
 
-/* Paragraphs */
-.markdown-content p {
-  @apply my-4;
+/* --- ANIMATED COPY BUTTON & TOOLTIP --- */
+.copy-button {
+  @apply p-1.5 rounded-md text-text-muted;
+  transition-property: color, background-color, box-shadow, transform;
+  transition-duration: 250ms;
+  transition-timing-function: ease-in-out;
 }
-
-/* Links */
-.markdown-content a {
-  @apply text-[--color-accent] hover:text-[--color-accent-hover] hover:underline;
+.copy-button:active {
+  @apply transition-transform duration-100 scale-90;
 }
-
-/* Lists */
-.markdown-content ul,
-.markdown-content ol {
-  @apply my-4 pl-6;
+.copy-button:not(.copy-button-success):hover {
+  @apply bg-[var(--color-surface-muted)] text-text-primary;
 }
-.markdown-content ul {
-  @apply list-disc;
-}
-.markdown-content ol {
-  @apply list-decimal;
-}
-.markdown-content li {
-  @apply mb-2;
-}
-.markdown-content li > p {
-  @apply inline; /* Prevents extra margins for paragraphs inside list items */
-}
-
-/* Blockquotes */
-.markdown-content blockquote {
-  @apply border-l-4 border-[--color-accent] pl-4 my-4 text-text-secondary italic;
-}
-
-/* Code Blocks */
-.markdown-content pre {
-  @apply bg-black/50 p-4 rounded-lg my-4 overflow-x-auto;
-}
-.markdown-content pre code {
-  @apply font-mono text-sm whitespace-pre;
-  /* Resetting inline code styles inside a pre block */
-  background-color: transparent !important;
-  padding: 0 !important;
+.copy-button-success {
+  background-color: var(--color-success);
+  /* (CORRECTION) Set icon color to a dark blue for contrast */
+  color: var(--color-background);
+  box-shadow: 0 0 12px 2px var(--color-success-glow);
 }
 
-/* Inline Code */
-.markdown-content code {
-  @apply bg-surface text-[--color-accent-focus] font-mono text-sm rounded px-1.5 py-1;
+.copy-tooltip-success {
+  @apply absolute bottom-full left-1/2 mb-2 whitespace-nowrap
+    rounded-md bg-black/80 px-2.5 py-1.5 text-xs font-semibold text-white;
+  /* Animate the tooltip in */
+  animation: tooltip-fade-in-up 0.3s ease-in-out forwards;
 }
-
-/* Tables */
-.markdown-content table {
-  @apply w-full my-4 border-collapse text-left;
-}
-.markdown-content th,
-.markdown-content td {
-  @apply border border-border-subtle p-3 align-top;
-}
-.markdown-content thead {
-  @apply bg-surface;
-}
-.markdown-content thead th {
-  @apply font-semibold;
-}
-
-/* Horizontal Rule */
-.markdown-content hr {
-  @apply border-t border-border my-6;
+.copy-tooltip-success::after {
+  @apply absolute left-1/2 top-full -translate-x-1/2 border-x-4 border-b-0
+    border-t-4 border-solid border-transparent border-t-black/80 content-[''];
 }
