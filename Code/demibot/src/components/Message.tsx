@@ -13,7 +13,7 @@ const Message: React.FC<MessageProps> = ({ text, sender }) => {
     
     <div className={`w-full flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       
-      <div className="max-w-[85%] md:max-w-[70%] flex items-start gap-4 my-6 animate-fade-in">
+      <div className="max-w-[85%] md:max-w-[70%] flex items-start gap-4 my-6">
 
         {!isUser && (
           <>

@@ -11,17 +11,19 @@ const SUGGESTIONS = [
   "How do I pay my tuition fees?",
 ];
 
-const API_URL = "http://127.0.0.1:8000/chat"; // Your backend URL
+const API_URL = "http://127.0.0.1:8000/chat"; // Backend URL for chat endpoint
 
 function App() {
   const [hasChatStarted, setHasChatStarted] = useState(false);
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [isSending, setIsSending] = useState(false);
 
-  // --- UPDATED API-CONNECTED FUNCTION ---
   const handleSendMessage = async (userMessage: string) => {
+    if (isSending) return;
+
     setIsSending(true);
 
+    // 1. Add user message and start chat if not started
     const newMessages: MessageProps[] = [...messages, { sender: 'user', text: userMessage }];
     setMessages(newMessages);
 
@@ -39,18 +41,49 @@ function App() {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`Network response was not ok: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      const botResponse = data.response;
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+      
+      // 2. Add an empty bot message placeholder to the state
+      setMessages(prev => [...prev, { sender: 'bot', text: '' }]);
 
-      setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      
+      // 3. Read and process the stream
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break; // Stream finished
+        }
+        
+        const chunk = decoder.decode(value, { stream: true });
+        
+        // 4. Append the received chunk to the last message (the bot's response)
+        setMessages(prev => {
+          const lastMessage = prev[prev.length - 1];
+          const updatedLastMessage = { ...lastMessage, text: lastMessage.text + chunk };
+          return [...prev.slice(0, -1), updatedLastMessage];
+        });
+      }
 
     } catch (error) {
       console.error("Failed to fetch chat response:", error);
       const errorResponse = "Sorry, I'm having trouble connecting to my brain right now. Please try again later.";
-      setMessages(prev => [...prev, { sender: 'bot', text: errorResponse }]);
+      
+      // Update the last bot message with the error, or add a new one if fetch failed immediately
+      setMessages(prev => {
+          const lastMessage = prev[prev.length - 1];
+          if (lastMessage?.sender === 'user' || !lastMessage) {
+              return [...prev, { sender: 'bot', text: errorResponse }];
+          }
+          const updatedLastMessage = { ...lastMessage, text: errorResponse };
+          return [...prev.slice(0, -1), updatedLastMessage];
+      });
     } finally {
       setIsSending(false);
     }
