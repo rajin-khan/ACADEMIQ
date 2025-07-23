@@ -11,11 +11,14 @@ const SUGGESTIONS = [
   "How do I pay my tuition fees?",
 ];
 
+const API_URL = "http://127.0.0.1:8000/chat"; // Your backend URL
+
 function App() {
   const [hasChatStarted, setHasChatStarted] = useState(false);
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [isSending, setIsSending] = useState(false);
 
+  // --- UPDATED API-CONNECTED FUNCTION ---
   const handleSendMessage = async (userMessage: string) => {
     setIsSending(true);
 
@@ -26,11 +29,31 @@ function App() {
       setHasChatStarted(true);
     }
     
-    setTimeout(() => {
-      const botResponse = `This is a simulated response to: "${userMessage}". The real Groq API integration will go here.`;
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const botResponse = data.response;
+
       setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
+
+    } catch (error) {
+      console.error("Failed to fetch chat response:", error);
+      const errorResponse = "Sorry, I'm having trouble connecting to my brain right now. Please try again later.";
+      setMessages(prev => [...prev, { sender: 'bot', text: errorResponse }]);
+    } finally {
       setIsSending(false);
-    }, 1000);
+    }
   };
 
   return (
