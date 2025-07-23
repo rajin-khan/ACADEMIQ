@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  /* 
+    FINAL Color Palette: Cool, Professional, Monochromatic Blue/Gray
+    Primary: Deep space blue/black.
+    Accent: A single, strong blue for all interactive elements.
+  */
+  --color-background: #0c0a09;      /* Almost Black / Rich Black */
+  --color-surface: #18181b;           /* Zinc-900 for surfaces */
+  
+  --color-text-primary: #f4f4f5;      /* Zinc-100 */
+  --color-text-secondary: #a1a1aa;    /* Zinc-400 */
+  --color-text-muted: #52525b;        /* Zinc-600 */
+
+  /* --- NEW BLUE ACCENT PALETTE --- */
+  --color-accent: #3b82f6;            /* Blue-500 */
+  --color-accent-hover: #2563eb;      /* Blue-600 */
+  --color-accent-focus: #60a5fa;      /* Blue-400 */
+  
+  --color-border: #3f3f46;            /* Zinc-700 */
+  --color-border-subtle: #27272a;     /* Zinc-800 */
+
+  /* Font Family */
+  --font-family-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base body styles */
+body {
+  font-family: var(--font-family-mono);
+  background-color: var(--color-background);
+  /* REVISED GRADIENT: No orange, just a cool blue glow */
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%,rgba(59, 130, 246, 0.15), transparent);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* Prevent body scroll */
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-subtle); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border); }
+
+/* Animation Keyframes */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-in-out forwards;
+}
